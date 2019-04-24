@@ -2,16 +2,47 @@
 
 namespace Drupal\pushy;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+
 /**
  * Class PushMessages.
  */
 class PushNotifications implements PushNotificationsInterface {
 
   /**
+   * Drupal\Core\Logger\LoggerChannelFactoryInterface definition.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
+   * Drupal\Core\Config\ConfigFactoryInterface definition.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * Drupal\Core\Session\AccountProxyInterface definition.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new PushNotifications object.
    */
-  public function __construct() {
-
+  public function __construct(
+    LoggerChannelFactoryInterface $logger_factory,
+    ConfigFactoryInterface $config_factory,
+    AccountProxyInterface $current_user
+  ) {
+    $this->loggerFactory = $logger_factory;
+    $this->configFactory = $config_factory;
+    $this->currentUser = $current_user;
   }
 
   public function sendNotification() {

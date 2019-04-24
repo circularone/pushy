@@ -8,9 +8,9 @@ use Drupal\Core\Session\AccountProxyInterface;
 use ExponentPhpSDK\Expo;
 
 /**
- * Class PushMessages.
+ * Class ExpoPushNotifications.
  */
-class ExpoPushMessages implements ExpoPushMessagesInterface {
+class ExpoPushNotifications implements ExpoPushNotificationsInterface {
 
   /**
    * Drupal\Core\Logger\LoggerChannelFactoryInterface definition.

@@ -3,7 +3,7 @@
 namespace Drupal\pushy;
 
 /**
- * Interface PushMessagesInterface.
+ * Interface PushNotificationsInterface.
  */
 interface PushNotificationsInterface {
 

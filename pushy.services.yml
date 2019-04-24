@@ -1,7 +1,7 @@
 services:
   pushy.notifications:
     class: Drupal\pushy\PushNotifications
-    arguments: []
+    arguments: ['@logger.factory', '@config.factory', '@current_user']
   pushy.expo_notifications:
     class: Drupal\pushy\ExpoPushNotifications
     arguments: ['@logger.factory', '@config.factory', '@current_user']
