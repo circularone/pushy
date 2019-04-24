@@ -7,7 +7,7 @@ function pushy_uninstall() {
 
   foreach ($fields as $field) {
     $definition = $update_manager
-      ->getFieldStorageDefinition('push_notification_device_token_' strtolower($field), 'user');
+      ->getFieldStorageDefinition('push_notification_device_token_' . strtolower($field), 'user');
     
     $update_manager->uninstallFieldStorageDefinition($definition);
   }

@@ -4,7 +4,7 @@ namespace Drupal\pushy\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\pushy\PushMessages;
+use Drupal\pushy\PushNotifications;
 
 /**
  * Class Settings.
@@ -33,8 +33,9 @@ class Settings extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('pushy.settings');
 
-    // \Drupal::service('pushy.send')->sendNotification();
-    \Drupal::service('pushy.expo.send')->sendNotification();
+    // \Drupal::service('pushy.notifications')->sendNotification();
+    // \Drupal::service('pushy.expo_notifications')->sendNotification();
+    
     $form['ios'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('IOS'),
