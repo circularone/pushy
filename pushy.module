@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Contains pushy.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function pushy_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the pushy module.
+    case 'help.page.pushy':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('IOS and Android push notification service') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ *
+ * Add fields to store push notification device tokens.
+ */
+function pushy_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() !== 'user') {
+    return $fields;
+  }
+
+  $token_types = ['Expo', 'IOS', 'Android'];
+
+  foreach ($token_types as $type) {
+    $fields['push_notification_device_token_' . strtolower($type)] = BaseFieldDefinition::create('string')
+      ->setLabel($type . t(' Device Token'))
+      ->setDescription($type . t(' push notification device token.'))
+      ->setRequired(FALSE)
+      ->setTranslatable(FALSE)
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 255,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+  }
+
+  return $fields;
+
+}
+

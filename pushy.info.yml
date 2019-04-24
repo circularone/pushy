@@ -1,0 +1,5 @@
+name: 'Pushy'
+type: module
+description: 'IOS and Android push notification service with Expo support.' 
+core: 8.x
+package: 'Circular One'
