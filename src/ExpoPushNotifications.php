@@ -55,23 +55,40 @@ class ExpoPushNotifications implements ExpoPushNotificationsInterface {
     $this->expo = \ExponentPhpSDK\Expo::normalSetup();
   }
 
-  public function sendNotification() {
-    $interestDetails = ['hola', 'ExponentPushToken[aq-ZPhOamnne5N0kc9hzOB]'];
+  public function sendNotification($uid, $notice_type, $data = []) {
+    $user = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties([
+        'uid' => $account->id(),
+      ]);
+    
+    $user = reset($user);
+    $tokens = $user->get('push_notification_device_token_expo');
 
-    // Subscribe the recipient to the server
-    $this->expo->subscribe($interestDetails[0], $interestDetails[1]);
+    if (!empty($tokens)) {
+      // Build the notification data
+      switch ($notice_type) {
+        case 'message':
+          $notification = [
+            'body' => 'You have a new message',
+            'data'=> json_encode([
+              'type' => 'message',
+              'id' => $data['id'],
+            ]),
+          ];
+          break;
+      }
 
-    // Build the notification data
-    $notification = ['body' => 'Hello World!'];
+      foreach ($tokens as $token) {
+        $interestDetails = ['barnesteam', 'ExponentPushToken[' . $token . ']'];
 
-    // Build the notification data
-    // $notification = [
-    //   'body' => 'Hello World!',
-    //   'data'=> json_encode(array('someData' => 'goes here'))
-    // ];
-
-    // Notify an interest with a notification
-    $this->expo->notify($interestDetails[0], $notification);
+        // Subscribe the recipient to the server
+        $this->expo->subscribe($interestDetails[0], $interestDetails[1]);
+      
+        // Notify an interest with a notification
+        $this->expo->notify($interestDetails[0], $notification);
+      }
+    }
   }
 
 }
