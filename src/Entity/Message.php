@@ -177,6 +177,7 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setLabel(t('Recipient'))
       ->setDescription(t('The user ID of the intended recipient of the message.'))
       ->setRevisionable(FALSE)
+      ->setRequired(FALSE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
