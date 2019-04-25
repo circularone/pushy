@@ -81,7 +81,7 @@ class RegisterDeviceTokenResource extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('pushy'),
       $container->get('current_user'),
-      $container->get('request_stack')->getCurrentRequest(),
+      $container->get('request_stack')->getCurrentRequest()
     );
   }
 
