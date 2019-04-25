@@ -106,6 +106,16 @@ class MessageResource extends ResourceBase {
       'body' => $data['message'],
     ]);
 
+    if (isset($data['recipient'])) {
+      $message->set('recipient', $data['recipient']);
+    }
+
+    $message->save();
+
+    $this->notifications->sendNotification($data['recipient'], 'message', [
+      'id' => $message->id(),
+    ]);
+
     return new ModifiedResourceResponse($entity, 200);
   }
 
