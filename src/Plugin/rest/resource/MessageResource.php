@@ -116,7 +116,7 @@ class MessageResource extends ResourceBase {
       'id' => $message->id(),
     ]);
 
-    return new ModifiedResourceResponse($entity, 200);
+    return new ModifiedResourceResponse(['test' => 'foo'], 200);
   }
 
 }
