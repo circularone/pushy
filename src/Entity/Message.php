@@ -177,12 +177,32 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Message entity.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
       ->setDisplayOptions('view', [
         'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
+
+    $fields['body'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Body'))
+      ->setDescription(t('The message body.'))
+      ->setSettings([
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
         'type' => 'string',
         'weight' => -4,
       ])

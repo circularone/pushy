@@ -9,3 +9,11 @@ pushy.settings:
   options:
     _admin_route: TRUE
 
+
+pushy.send_notification:
+  path: '/admin/pushy/send-notification'
+  defaults:
+    _title: 'Send notification'
+    _form: 'Drupal\pushy\Form\SendNotification'
+  requirements:
+    _permission: 'access administration pages'
