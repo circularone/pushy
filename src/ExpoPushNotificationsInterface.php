@@ -7,7 +7,7 @@ namespace Drupal\pushy;
  */
 interface ExpoPushNotificationsInterface {
 
-  public function sendNotification();
+  public function sendNotification($uid, $notice_type, $data = []);
 
 }
 
