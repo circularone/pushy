@@ -56,13 +56,7 @@ class ExpoPushNotifications implements ExpoPushNotificationsInterface {
   }
 
   public function sendNotification($uid, $notice_type, $data = []) {
-    $user = \Drupal::entityTypeManager()
-      ->getStorage('user')
-      ->loadByProperties([
-        'uid' => $account->id(),
-      ]);
-    
-    $user = reset($user);
+    $user = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
     $tokens = $user->get('push_notification_device_token_expo');
 
     if (!empty($tokens)) {
@@ -84,7 +78,7 @@ class ExpoPushNotifications implements ExpoPushNotificationsInterface {
 
         // Subscribe the recipient to the server
         $this->expo->subscribe($interestDetails[0], $interestDetails[1]);
-      
+
         // Notify an interest with a notification
         $this->expo->notify($interestDetails[0], $notification);
       }
