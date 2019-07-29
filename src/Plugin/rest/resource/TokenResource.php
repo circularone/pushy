@@ -12,17 +12,17 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Provides a resource to get view modes by entity and bundle.
+ * Provides a resource to add a push notification device token.
  *
  * @RestResource(
- *   id = "register_device_token_resource",
- *   label = @Translation("Register device token resource"),
+ *   id = "token_resource",
+ *   label = @Translation("Token resource"),
  *   uri_paths = {
- *     "canonical" = "/register-device-token"
+ *     "canonical" = "/pushy/token"
  *   }
  * )
  */
-class RegisterDeviceTokenResource extends ResourceBase {
+class TokenResource extends ResourceBase {
 
   /**
    * A current user instance.
@@ -33,13 +33,13 @@ class RegisterDeviceTokenResource extends ResourceBase {
 
   /**
    * The curren request.
-   * 
+   *
    * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $request;
 
   /**
-   * Constructs a new RegisterDeviceTokenResource object.
+   * Constructs a new TokenResource object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -53,8 +53,6 @@ class RegisterDeviceTokenResource extends ResourceBase {
    *   A logger instance.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   A current user instance.
-   * @param \Symfony\Component\HttpFoundation\Request
-   *   The request.
    */
   public function __construct(
     array $configuration,
@@ -96,10 +94,6 @@ class RegisterDeviceTokenResource extends ResourceBase {
    */
   public function patch($data) {
 
-    if (!intval($this->currentUser->id())) {
-      throw new AccessDeniedHttpException();
-    }
-
     $device_type = $data['device'];
     $token = $data['token'];
     $device_type = $this->request->query->get('device');
@@ -112,18 +106,36 @@ class RegisterDeviceTokenResource extends ResourceBase {
     }
 
     if (!in_array($device_type, ['expo', 'ios', 'android'])) {
+      $this->logger->notice("User tried to register unsupported push notification device token type");
+
       return new ModifiedResourceResponse([
         'error' => t('Device type must be one of expo, ios or android'),
       ], 406);
     }
 
     $account = $this->currentUser->getAccount();
-    $tokens = $account->get('push_notification_device_token_' . $device_type)->value;
-    $tokens[] = ['value' => $token];
-    $account->set('push_notification_device_token_' . $device_type, $tokens);
+    $update_value = [];
+    $tokens = $account->get('push_notification_device_token_' . $device_type . '.')->value;
+
+    if (!$tokens) {
+      foreach ($tokens as $item) {
+        if ($item->value === $token) {
+          $this->logger->notice("Push notification token already exists {$device_type}: {token}. Exiting.");
+
+          return new ModifiedResourceResponse($account, 200);
+        }
+        $update_value[] = ['value' => $item->value];
+      }
+    }
+
+    $update_value[] = ['value' => $token];
+    $account->set('push_notification_device_token_' . $device_type, $update_value);
     $account->save();
 
-    return new ModifiedResourceResponse(['message' => t('Device token saved')], 200);
+    $this->logger->notice("Push notification device token added for {$device_type}: {token}.");
+
+    return new ModifiedResourceResponse($account, 200);
+
   }
 
 }
