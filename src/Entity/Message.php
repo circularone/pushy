@@ -8,6 +8,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the Message entity.
@@ -181,6 +182,7 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
@@ -199,6 +201,33 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // $fields['recipients'] = BaseFieldDefinition::create('entity_reference')
+    //   ->setLabel(t('Recipient'))
+    //   ->setDescription(t('Recipients of the message.'))
+    //   ->setRevisionable(FALSE)
+    //   ->setRequired(TRUE)
+    //   ->setSetting('target_type', 'user')
+    //   ->setSetting('handler', 'default')
+    //   ->setTranslatable(TRUE)
+    //   ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+    //   ->setDisplayOptions('view', [
+    //     'label' => 'hidden',
+    //     'type' => 'author',
+    //     'weight' => 0,
+    //   ])
+    //   ->setDisplayOptions('form', [
+    //     'type' => 'entity_reference_autocomplete',
+    //     'weight' => 5,
+    //     'settings' => [
+    //       'match_operator' => 'CONTAINS',
+    //       'size' => '60',
+    //       'autocomplete_type' => 'tags',
+    //       'placeholder' => '',
+    //     ],
+    //   ])
+    //   ->setDisplayConfigurable('form', TRUE)
+    //   ->setDisplayConfigurable('view', TRUE);
+
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Message entity.'))
@@ -206,7 +235,7 @@ class Message extends ContentEntityBase implements MessageInterface {
         'max_length' => 255,
         'text_processing' => 0,
       ])
-      ->setDefaultValue('')
+      ->setDefaultValue('App Message')
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
@@ -218,7 +247,7 @@ class Message extends ContentEntityBase implements MessageInterface {
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE)
-      ->setRequired(TRUE);
+      ->setRequired(FALSE);
 
     $fields['body'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Body'))
